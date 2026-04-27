@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import os
 
 # Column names for NSL-KDD
 columns = ['duration', 'protocol_type', 'service', 'flag', 'src_bytes',
@@ -18,6 +19,14 @@ columns = ['duration', 'protocol_type', 'service', 'flag', 'src_bytes',
 
 def load_nsl_kdd(filepath):
     """Load NSL-KDD dataset with validation"""
+    # If relative path, resolve it relative to the project root
+    if not os.path.isabs(filepath):
+        # Get the directory of this module
+        module_dir = os.path.dirname(os.path.abspath(__file__))
+        # Go up one level to project root, then down to data
+        project_root = os.path.dirname(module_dir)
+        filepath = os.path.join(project_root, filepath)
+    
     try:
         df = pd.read_csv(filepath, names=columns)
     except FileNotFoundError:
